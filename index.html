@@ -1,0 +1,1807 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#07101f">
+<meta name="mobile-web-app-capable" content="yes">
+<title>WebDesk OS 12 Demo</title>
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+  --bg:#07101f;
+  --panel:rgba(14,24,42,.88);
+  --panel2:rgba(25,38,62,.9);
+  --border:rgba(255,255,255,.13);
+  --text:#f5f8ff;
+  --muted:#9aa9bf;
+  --accent:#6ea8ff;
+  --shadow:0 25px 80px rgba(0,0,0,.5);
+}
+
+html,body{
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--text);
+}
+
+button,input,select{
+  font:inherit;
+}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+body{
+  background:
+    radial-gradient(circle at 50% 20%,#244476 0,#101d35 35%,#040811 80%);
+}
+
+
+/* =========================
+   DESKTOP
+========================= */
+
+#desktop{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 25%,rgba(80,140,255,.3),transparent 25%),
+    radial-gradient(circle at 15% 90%,rgba(145,80,255,.18),transparent 30%),
+    linear-gradient(145deg,#07111f,#0b172b 50%,#03070e);
+}
+
+#desktop:before{
+  content:"";
+  position:absolute;
+  inset:-30%;
+  background:
+    conic-gradient(
+      from 210deg,
+      transparent 0 25%,
+      rgba(90,142,255,.12),
+      transparent 45% 100%
+    );
+  filter:blur(50px);
+  animation:aurora 15s ease-in-out infinite alternate;
+}
+
+@keyframes aurora{
+  to{
+    transform:rotate(15deg) scale(1.1);
+  }
+}
+
+
+/* =========================
+   DESKTOP ICONS
+========================= */
+
+.desktop-icons{
+  position:absolute;
+  top:20px;
+  left:16px;
+  z-index:2;
+  display:grid;
+  grid-template-columns:repeat(2,82px);
+  gap:12px 8px;
+}
+
+.desktop-icon{
+  width:82px;
+  padding:8px 4px;
+  border-radius:12px;
+  background:transparent;
+  color:white;
+  text-align:center;
+}
+
+.desktop-icon:hover{
+  background:rgba(255,255,255,.1);
+}
+
+.icon-box{
+  width:45px;
+  height:45px;
+  margin:auto;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  font-size:21px;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.22),
+      rgba(255,255,255,.05)
+    );
+  border:1px solid rgba(255,255,255,.13);
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+.desktop-icon span{
+  display:block;
+  margin-top:7px;
+  font-size:11px;
+  text-shadow:0 2px 6px #000;
+}
+
+
+/* =========================
+   CLOCK
+========================= */
+
+.center-clock{
+  position:absolute;
+  top:8%;
+  left:50%;
+  transform:translateX(-50%);
+  text-align:center;
+  pointer-events:none;
+  z-index:1;
+}
+
+.center-clock .time{
+  font-size:clamp(45px,7vw,88px);
+  font-weight:600;
+  letter-spacing:-4px;
+}
+
+.center-clock .date{
+  margin-top:4px;
+  color:#b9c7dc;
+  font-size:14px;
+}
+
+
+/* =========================
+   TASKBAR
+========================= */
+
+.taskbar{
+  position:absolute;
+  left:10px;
+  right:10px;
+  bottom:10px;
+  height:64px;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  padding:8px 10px;
+  border:1px solid var(--border);
+  border-radius:19px;
+  background:rgba(9,17,31,.75);
+  backdrop-filter:blur(28px);
+  box-shadow:var(--shadow);
+}
+
+.task-center{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.task-btn{
+  min-width:46px;
+  height:46px;
+  padding:0 12px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  background:transparent;
+  color:white;
+  font-size:20px;
+}
+
+.task-btn:hover{
+  background:rgba(255,255,255,.11);
+}
+
+.search-task{
+  width:min(300px,32vw);
+  height:44px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:0 15px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:rgba(255,255,255,.07);
+  color:#cbd6e7;
+  font-size:12px;
+}
+
+.search-task:hover{
+  background:rgba(255,255,255,.1);
+}
+
+.tray{
+  margin-left:auto;
+  display:flex;
+  align-items:center;
+}
+
+.tray-clock{
+  min-width:70px;
+  padding:0 7px;
+  text-align:right;
+  font-size:11px;
+  line-height:1.4;
+}
+
+
+/* =========================
+   WINDOWS
+========================= */
+
+.window{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-52%);
+  width:min(1100px,calc(100vw - 30px));
+  height:min(720px,calc(100vh - 125px));
+  min-width:300px;
+  min-height:250px;
+  z-index:10;
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:18px;
+  background:rgba(11,18,31,.92);
+  box-shadow:0 35px 100px rgba(0,0,0,.58);
+}
+
+.window.open{
+  display:flex;
+}
+
+.window.active{
+  z-index:40;
+}
+
+.window.maximized{
+  left:8px;
+  top:8px;
+  width:calc(100vw - 16px);
+  height:calc(100vh - 80px);
+  transform:none;
+  border-radius:15px;
+}
+
+.titlebar{
+  height:48px;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:0 10px 0 15px;
+  border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.035);
+}
+
+.app-title{
+  flex:1;
+  font-size:12px;
+  font-weight:600;
+}
+
+.window-controls{
+  display:flex;
+  gap:4px;
+}
+
+.win-control{
+  width:32px;
+  height:30px;
+  border-radius:8px;
+  background:transparent;
+  color:#b8c4d7;
+}
+
+.win-control:hover{
+  background:rgba(255,255,255,.1);
+}
+
+.win-control.close:hover{
+  background:#c83c4b;
+  color:white;
+}
+
+.window-content{
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+}
+
+
+/* =========================
+   BROWSER
+========================= */
+
+.browser{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  background:white;
+  color:#202124;
+}
+
+
+/* TABS */
+
+.browser-tabs{
+  height:43px;
+  min-height:43px;
+  display:flex;
+  align-items:flex-end;
+  gap:4px;
+  padding:5px 8px 0;
+  background:#202124;
+  overflow-x:auto;
+}
+
+.browser-tabs::-webkit-scrollbar{
+  display:none;
+}
+
+.browser-tab{
+  height:38px;
+  min-width:140px;
+  max-width:230px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:0 9px;
+  border-radius:10px 10px 0 0;
+  background:#292a2d;
+  color:#d1d5db;
+  cursor:pointer;
+  font-size:12px;
+  flex-shrink:0;
+}
+
+.browser-tab.active{
+  background:#fff;
+  color:#202124;
+}
+
+.browser-tab-title{
+  flex:1;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+
+.browser-tab-close{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:transparent;
+  color:inherit;
+}
+
+.browser-tab-close:hover{
+  background:rgba(127,127,127,.2);
+}
+
+.new-tab{
+  width:34px;
+  height:34px;
+  margin-bottom:2px;
+  flex-shrink:0;
+  border-radius:8px;
+  background:transparent;
+  color:white;
+  font-size:20px;
+}
+
+.new-tab:hover{
+  background:rgba(255,255,255,.12);
+}
+
+
+/* TOOLBAR */
+
+.browser-toolbar{
+  height:53px;
+  min-height:53px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:7px 9px;
+  background:#fff;
+  border-bottom:1px solid #d8dce3;
+}
+
+.browser-nav{
+  width:35px;
+  height:35px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:transparent;
+  color:#374151;
+  font-size:18px;
+}
+
+.browser-nav:hover{
+  background:#eef1f5;
+}
+
+.browser-address{
+  flex:1;
+  min-width:80px;
+  height:37px;
+  padding:0 16px;
+  border:1px solid #d4d8df;
+  border-radius:20px;
+  outline:none;
+  background:#f1f3f4;
+  color:#202124;
+  font-size:13px;
+}
+
+.browser-address:focus{
+  background:white;
+  border-color:#4285f4;
+  box-shadow:0 0 0 2px rgba(66,133,244,.15);
+}
+
+.browser-engine{
+  height:37px;
+  border:1px solid #d4d8df;
+  border-radius:19px;
+  padding:0 10px;
+  background:white;
+  color:#374151;
+  font-size:11px;
+}
+
+.browser-go{
+  height:37px;
+  padding:0 15px;
+  border-radius:19px;
+  background:#2563eb;
+  color:white;
+  font-size:12px;
+  font-weight:bold;
+}
+
+
+/* PAGE */
+
+.browser-page{
+  position:relative;
+  flex:1;
+  min-height:0;
+  background:white;
+}
+
+.browser-home{
+  position:absolute;
+  inset:0;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:65px 20px;
+  background:
+    radial-gradient(circle at 50% 10%,#dbeafe,transparent 35%),
+    white;
+}
+
+.browser-home h1{
+  margin:0;
+  color:#202124;
+  font-size:clamp(38px,6vw,58px);
+  letter-spacing:-4px;
+}
+
+.browser-home p{
+  color:#64748b;
+  font-size:13px;
+}
+
+.browser-search{
+  width:min(700px,100%);
+  display:flex;
+  gap:8px;
+  margin-top:25px;
+}
+
+.browser-search input{
+  flex:1;
+  min-width:0;
+  height:50px;
+  padding:0 20px;
+  border:1px solid #cbd5e1;
+  border-radius:25px;
+  outline:none;
+  box-shadow:0 5px 20px rgba(0,0,0,.07);
+}
+
+.browser-search button{
+  height:50px;
+  padding:0 22px;
+  border-radius:25px;
+  background:#2563eb;
+  color:white;
+  font-weight:600;
+}
+
+.quick-sites{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:9px;
+  margin-top:20px;
+}
+
+.quick-site{
+  padding:10px 15px;
+  border-radius:20px;
+  background:#f1f5f9;
+  color:#334155;
+  font-size:12px;
+}
+
+.quick-site:hover{
+  background:#e2e8f0;
+}
+
+
+/* =========================
+   START MENU
+========================= */
+
+.start-menu{
+  position:absolute;
+  z-index:90;
+  left:50%;
+  bottom:84px;
+  transform:translateX(-50%) scale(.96);
+  transform-origin:bottom center;
+  width:min(700px,calc(100vw - 22px));
+  height:min(620px,calc(100vh - 105px));
+  padding:22px;
+  border:1px solid var(--border);
+  border-radius:25px;
+  background:rgba(11,20,36,.94);
+  backdrop-filter:blur(35px);
+  box-shadow:var(--shadow);
+  opacity:0;
+  pointer-events:none;
+  transition:.18s ease;
+  overflow:auto;
+}
+
+.start-menu.open{
+  opacity:1;
+  transform:translateX(-50%) scale(1);
+  pointer-events:auto;
+}
+
+.start-search{
+  width:100%;
+  height:45px;
+  padding:0 16px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  outline:none;
+  background:rgba(255,255,255,.08);
+  color:white;
+}
+
+.start-title{
+  margin:23px 0 12px;
+  color:#b7c4d7;
+  font-size:13px;
+  font-weight:600;
+}
+
+.app-grid{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:7px;
+}
+
+.start-app{
+  padding:13px 5px;
+  border-radius:14px;
+  background:transparent;
+  color:white;
+  text-align:center;
+  font-size:10px;
+}
+
+.start-app:hover{
+  background:rgba(255,255,255,.09);
+}
+
+.mini-icon{
+  width:39px;
+  height:39px;
+  margin:auto auto 7px;
+  display:grid;
+  place-items:center;
+  border-radius:11px;
+  font-size:17px;
+  background:linear-gradient(145deg,rgba(255,255,255,.18),rgba(255,255,255,.05));
+  border:1px solid var(--border);
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px){
+
+  .desktop-icons{
+    grid-template-columns:repeat(2,70px);
+  }
+
+  .desktop-icon{
+    width:70px;
+  }
+
+  .center-clock{
+    top:5%;
+  }
+
+  .taskbar{
+    height:58px;
+  }
+
+  .task-center{
+    left:50%;
+  }
+
+  .search-task{
+    display:none;
+  }
+
+  .browser-engine{
+    display:none;
+  }
+
+  .browser-go{
+    display:none;
+  }
+
+  .browser-tab{
+    min-width:110px;
+  }
+
+  .window{
+    width:calc(100vw - 12px);
+    height:calc(100vh - 90px);
+  }
+
+  .window.maximized{
+    left:4px;
+    top:4px;
+    width:calc(100vw - 8px);
+    height:calc(100vh - 70px);
+  }
+
+  .app-grid{
+    grid-template-columns:repeat(4,1fr);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="desktop">
+
+  <!-- DESKTOP ICONS -->
+
+  <div class="desktop-icons">
+
+    <button class="desktop-icon" onclick="openBrowser()">
+      <div class="icon-box">🌐</div>
+      <span>Web Browser</span>
+    </button>
+
+    <button class="desktop-icon" onclick="openBrowser();setTimeout(()=>newBrowserTab(),100)">
+      <div class="icon-box">➕</div>
+      <span>New Tab</span>
+    </button>
+
+    <button class="desktop-icon" onclick="openReal('https://www.youtube.com')">
+      <div class="icon-box">▶️</div>
+      <span>YouTube</span>
+    </button>
+
+    <button class="desktop-icon" onclick="openReal('https://www.google.com')">
+      <div class="icon-box">🔎</div>
+      <span>Google</span>
+    </button>
+
+  </div>
+
+
+  <!-- CLOCK -->
+
+  <div class="center-clock">
+    <div class="time" id="desktopTime">12:00</div>
+    <div class="date" id="desktopDate">Loading...</div>
+  </div>
+
+
+  <!-- BROWSER WINDOW -->
+
+  <section class="window" id="browserWindow">
+
+    <div class="titlebar">
+
+      <span>🌐</span>
+
+      <div class="app-title">
+        WebDesk Browser
+      </div>
+
+      <div class="window-controls">
+
+        <button
+          class="win-control"
+          onclick="minimizeWindow()">
+          −
+        </button>
+
+        <button
+          class="win-control"
+          onclick="maximizeBrowser()">
+          □
+        </button>
+
+        <button
+          class="win-control close"
+          onclick="closeBrowser()">
+          ×
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="window-content">
+
+      <div class="browser">
+
+        <!-- TABS -->
+
+        <div
+          class="browser-tabs"
+          id="browserTabs">
+        </div>
+
+
+        <!-- TOOLBAR -->
+
+        <div class="browser-toolbar">
+
+          <button
+            class="browser-nav"
+            onclick="browserBack()">
+            ←
+          </button>
+
+          <button
+            class="browser-nav"
+            onclick="browserForward()">
+            →
+          </button>
+
+          <button
+            class="browser-nav"
+            onclick="browserReload()">
+            ↻
+          </button>
+
+          <input
+            id="browserAddress"
+            class="browser-address"
+            placeholder="Search Google or enter a web address"
+            onkeydown="if(event.key==='Enter')browserNavigate()"
+          >
+
+          <select
+            id="browserEngine"
+            class="browser-engine">
+
+            <option value="google">
+              Google
+            </option>
+
+            <option value="bing">
+              Microsoft Bing
+            </option>
+
+            <option value="duckduckgo">
+              DuckDuckGo
+            </option>
+
+          </select>
+
+          <button
+            class="browser-go"
+            onclick="browserNavigate()">
+            Go
+          </button>
+
+        </div>
+
+
+        <!-- PAGE -->
+
+        <div class="browser-page">
+
+          <div
+            class="browser-home"
+            id="browserHome">
+
+            <h1>WebDesk</h1>
+
+            <p>
+              Search the internet
+            </p>
+
+            <div class="browser-search">
+
+              <input
+                id="browserHomeSearch"
+                placeholder="Search anything on the internet..."
+                onkeydown="if(event.key==='Enter')homeSearch()"
+              >
+
+              <button onclick="homeSearch()">
+                Search
+              </button>
+
+            </div>
+
+
+            <div class="quick-sites">
+
+              <button
+                class="quick-site"
+                onclick="openSearchEngine('google')">
+                🔵 Google
+              </button>
+
+              <button
+                class="quick-site"
+                onclick="openSearchEngine('bing')">
+                🟦 Microsoft Bing
+              </button>
+
+              <button
+                class="quick-site"
+                onclick="openSearchEngine('duckduckgo')">
+                🦆 DuckDuckGo
+              </button>
+
+              <button
+                class="quick-site"
+                onclick="openReal('https://www.youtube.com')">
+                ▶️ YouTube
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- START MENU -->
+
+  <div
+    class="start-menu"
+    id="startMenu">
+
+    <input
+      class="start-search"
+      placeholder="Search apps and settings..."
+      onkeydown="startSearch(event)"
+    >
+
+    <div class="start-title">
+      Apps
+    </div>
+
+    <div class="app-grid">
+
+      <button class="start-app" onclick="openBrowser()">
+        <div class="mini-icon">🌐</div>
+        Browser
+      </button>
+
+      <button class="start-app" onclick="openReal('https://www.youtube.com')">
+        <div class="mini-icon">▶️</div>
+        YouTube
+      </button>
+
+      <button class="start-app" onclick="openReal('https://www.google.com')">
+        <div class="mini-icon">🔵</div>
+        Google
+      </button>
+
+      <button class="start-app" onclick="openReal('https://www.bing.com')">
+        <div class="mini-icon">🟦</div>
+        Bing
+      </button>
+
+      <button class="start-app" onclick="openReal('https://duckduckgo.com')">
+        <div class="mini-icon">🦆</div>
+        DuckDuckGo
+      </button>
+
+      <button class="start-app" onclick="newBrowserTab()">
+        <div class="mini-icon">➕</div>
+        New Tab
+      </button>
+
+    </div>
+
+    <div class="start-title">
+      Recommended
+    </div>
+
+    <div
+      style="
+        display:grid;
+        grid-template-columns:1fr 1fr;
+        gap:8px;
+      ">
+
+      <button
+        style="
+          padding:15px;
+          border-radius:14px;
+          background:rgba(255,255,255,.06);
+          color:white;
+          text-align:left;
+        "
+        onclick="openSearchEngine('google')">
+
+        🔎
+        <b>Search Google</b>
+
+        <br>
+
+        <small style="color:#8796ac">
+          Search the web
+        </small>
+
+      </button>
+
+
+      <button
+        style="
+          padding:15px;
+          border-radius:14px;
+          background:rgba(255,255,255,.06);
+          color:white;
+          text-align:left;
+        "
+        onclick="openReal('https://www.youtube.com')">
+
+        ▶️
+        <b>YouTube</b>
+
+        <br>
+
+        <small style="color:#8796ac">
+          Watch videos
+        </small>
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- TASKBAR -->
+
+  <div class="taskbar">
+
+    <button
+      class="task-btn"
+      onclick="toggleStart()">
+
+      <span
+        style="
+          display:grid;
+          grid-template-columns:1fr 1fr;
+          gap:2px;
+          width:22px;
+          height:22px;
+        ">
+
+        <i style="background:white"></i>
+        <i style="background:white"></i>
+        <i style="background:white"></i>
+        <i style="background:white"></i>
+
+      </span>
+
+    </button>
+
+
+    <button
+      class="search-task"
+      onclick="openBrowser()">
+
+      🔍
+      Search the web
+
+    </button>
+
+
+    <div class="task-center">
+
+      <button
+        class="task-btn"
+        onclick="openBrowser()">
+        🌐
+      </button>
+
+      <button
+        class="task-btn"
+        onclick="openReal('https://www.youtube.com')">
+        ▶️
+      </button>
+
+    </div>
+
+
+    <div class="tray">
+
+      <div
+        class="tray-clock"
+        id="trayClock">
+        12:00
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   CLOCK
+========================= */
+
+function updateClock(){
+
+  const now = new Date();
+
+  let hours = now.getHours();
+
+  const minutes =
+    String(now.getMinutes()).padStart(2,"0");
+
+  const ampm =
+    hours >= 12 ? "PM" : "AM";
+
+  hours =
+    hours % 12 || 12;
+
+  const time =
+    `${hours}:${minutes} ${ampm}`;
+
+  document.getElementById("desktopTime").textContent =
+    time;
+
+  document.getElementById("trayClock").textContent =
+    time;
+
+  document.getElementById("desktopDate").textContent =
+    now.toLocaleDateString(undefined,{
+      weekday:"long",
+      month:"long",
+      day:"numeric",
+      year:"numeric"
+    });
+
+}
+
+updateClock();
+setInterval(updateClock,1000);
+
+
+/* =========================
+   START MENU
+========================= */
+
+function toggleStart(){
+
+  document
+    .getElementById("startMenu")
+    .classList.toggle("open");
+
+}
+
+document.addEventListener("click",function(e){
+
+  const menu =
+    document.getElementById("startMenu");
+
+  const button =
+    e.target.closest(".task-btn");
+
+  if(
+    menu.classList.contains("open") &&
+    !menu.contains(e.target) &&
+    !button
+  ){
+    menu.classList.remove("open");
+  }
+
+});
+
+
+function startSearch(e){
+
+  if(e.key !== "Enter") return;
+
+  const value =
+    e.target.value.trim();
+
+  if(!value) return;
+
+  openBrowser();
+
+  setTimeout(()=>{
+
+    document.getElementById("browserHomeSearch").value =
+      value;
+
+    homeSearch();
+
+  },100);
+
+}
+
+
+/* =========================
+   BROWSER STATE
+========================= */
+
+let browserTabs = [];
+
+let activeBrowserTab = null;
+
+let nextTabId = 1;
+
+
+/* =========================
+   OPEN BROWSER
+========================= */
+
+function openBrowser(){
+
+  const win =
+    document.getElementById("browserWindow");
+
+  win.classList.add("open");
+  win.classList.add("active");
+
+  document.getElementById("startMenu")
+    .classList.remove("open");
+
+  if(browserTabs.length === 0){
+
+    createBrowserTab();
+
+  }
+
+}
+
+
+/* =========================
+   CLOSE BROWSER
+========================= */
+
+function closeBrowser(){
+
+  document
+    .getElementById("browserWindow")
+    .classList.remove("open");
+
+}
+
+
+/* =========================
+   MINIMIZE
+========================= */
+
+function minimizeWindow(){
+
+  document
+    .getElementById("browserWindow")
+    .classList.remove("open");
+
+}
+
+
+/* =========================
+   MAXIMIZE
+========================= */
+
+function maximizeBrowser(){
+
+  document
+    .getElementById("browserWindow")
+    .classList.toggle("maximized");
+
+}
+
+
+/* =========================
+   CREATE TAB
+========================= */
+
+function createBrowserTab(){
+
+  const tab = {
+
+    id:nextTabId++,
+
+    title:"New Tab",
+
+    url:"",
+
+    history:[],
+
+    historyIndex:-1
+
+  };
+
+  browserTabs.push(tab);
+
+  activeBrowserTab = tab.id;
+
+  renderTabs();
+
+  showHome();
+
+}
+
+
+/* =========================
+   NEW TAB
+========================= */
+
+function newBrowserTab(){
+
+  openBrowser();
+
+  createBrowserTab();
+
+}
+
+
+/* =========================
+   SWITCH TAB
+========================= */
+
+function switchTab(id){
+
+  activeBrowserTab = id;
+
+  const tab =
+    browserTabs.find(t=>t.id===id);
+
+  if(!tab) return;
+
+  renderTabs();
+
+  if(tab.url){
+
+    openReal(tab.url);
+
+  }else{
+
+    showHome();
+
+  }
+
+}
+
+
+/* =========================
+   CLOSE TAB
+========================= */
+
+function closeTab(event,id){
+
+  event.stopPropagation();
+
+  if(browserTabs.length === 1){
+
+    browserTabs[0].url = "";
+    browserTabs[0].title = "New Tab";
+    browserTabs[0].history = [];
+    browserTabs[0].historyIndex = -1;
+
+    activeBrowserTab =
+      browserTabs[0].id;
+
+    renderTabs();
+    showHome();
+
+    return;
+
+  }
+
+  const index =
+    browserTabs.findIndex(t=>t.id===id);
+
+  browserTabs =
+    browserTabs.filter(t=>t.id!==id);
+
+  if(activeBrowserTab===id){
+
+    const newIndex =
+      Math.max(0,index-1);
+
+    activeBrowserTab =
+      browserTabs[newIndex].id;
+
+  }
+
+  renderTabs();
+
+  switchTab(activeBrowserTab);
+
+}
+
+
+/* =========================
+   RENDER TABS
+========================= */
+
+function renderTabs(){
+
+  const bar =
+    document.getElementById("browserTabs");
+
+  bar.innerHTML = "";
+
+  browserTabs.forEach(tab=>{
+
+    const el =
+      document.createElement("div");
+
+    el.className =
+      "browser-tab" +
+      (tab.id===activeBrowserTab
+        ? " active"
+        : "");
+
+    el.onclick =
+      ()=>switchTab(tab.id);
+
+    el.innerHTML = `
+
+      <span>🌐</span>
+
+      <span class="browser-tab-title">
+        ${escapeHTML(tab.title)}
+      </span>
+
+      <button
+        class="browser-tab-close"
+        onclick="closeTab(event,${tab.id})">
+        ×
+      </button>
+
+    `;
+
+    bar.appendChild(el);
+
+  });
+
+
+  const plus =
+    document.createElement("button");
+
+  plus.className = "new-tab";
+
+  plus.textContent = "+";
+
+  plus.onclick = newBrowserTab;
+
+  bar.appendChild(plus);
+
+}
+
+
+/* =========================
+   SEARCH URL
+========================= */
+
+function searchURL(engine,query){
+
+  const q =
+    encodeURIComponent(query);
+
+  if(engine==="bing"){
+
+    return "https://www.bing.com/search?q="+q;
+
+  }
+
+  if(engine==="duckduckgo"){
+
+    return "https://duckduckgo.com/?q="+q;
+
+  }
+
+  return "https://www.google.com/search?q="+q;
+
+}
+
+
+/* =========================
+   NAVIGATE
+========================= */
+
+function browserNavigate(){
+
+  const input =
+    document.getElementById("browserAddress");
+
+  const value =
+    input.value.trim();
+
+  if(!value) return;
+
+
+  let url;
+
+
+  if(
+    value.startsWith("http://") ||
+    value.startsWith("https://")
+  ){
+
+    url = value;
+
+  }else if(
+    value.includes(".") &&
+    !value.includes(" ")
+  ){
+
+    url =
+      "https://" + value;
+
+  }else{
+
+    const engine =
+      document.getElementById("browserEngine").value;
+
+    url =
+      searchURL(engine,value);
+
+  }
+
+
+  navigateTo(url);
+
+}
+
+
+/* =========================
+   NAVIGATE TO URL
+========================= */
+
+function navigateTo(url){
+
+  const tab =
+    browserTabs.find(t=>t.id===activeBrowserTab);
+
+  if(!tab) return;
+
+
+  tab.url = url;
+
+
+  if(
+    tab.history.length===0 ||
+    tab.history[tab.historyIndex]!==url
+  ){
+
+    tab.history =
+      tab.history.slice(
+        0,
+        tab.historyIndex+1
+      );
+
+    tab.history.push(url);
+
+    tab.historyIndex =
+      tab.history.length-1;
+
+  }
+
+
+  tab.title =
+    getSiteName(url);
+
+
+  renderTabs();
+
+
+  /*
+    IMPORTANT:
+    Regular webpages cannot reliably be
+    embedded because many websites send
+    X-Frame-Options / CSP restrictions.
+
+    Therefore we use the REAL website.
+  */
+
+  openReal(url);
+
+}
+
+
+/* =========================
+   OPEN REAL WEBSITE
+========================= */
+
+function openReal(url){
+
+  /*
+    Open the actual website in a new
+    browser tab.
+
+    This bypasses iframe restrictions.
+  */
+
+  window.open(
+    url,
+    "_blank",
+    "noopener,noreferrer"
+  );
+
+}
+
+
+/* =========================
+   SITE NAME
+========================= */
+
+function getSiteName(url){
+
+  try{
+
+    const host =
+      new URL(url).hostname
+        .replace("www.","");
+
+    if(host.includes("youtube"))
+      return "YouTube";
+
+    if(host.includes("google"))
+      return "Google";
+
+    if(host.includes("bing"))
+      return "Microsoft Bing";
+
+    if(host.includes("duckduckgo"))
+      return "DuckDuckGo";
+
+    return host;
+
+  }catch(e){
+
+    return "Website";
+
+  }
+
+}
+
+
+/* =========================
+   HOME SEARCH
+========================= */
+
+function homeSearch(){
+
+  const input =
+    document.getElementById("browserHomeSearch");
+
+  const query =
+    input.value.trim();
+
+  if(!query) return;
+
+  const engine =
+    document.getElementById("browserEngine").value;
+
+  navigateTo(
+    searchURL(engine,query)
+  );
+
+}
+
+
+/* =========================
+   OPEN SEARCH ENGINE
+========================= */
+
+function openSearchEngine(engine){
+
+  document.getElementById("browserEngine").value =
+    engine;
+
+  const urls = {
+
+    google:"https://www.google.com",
+
+    bing:"https://www.bing.com",
+
+    duckduckgo:"https://duckduckgo.com"
+
+  };
+
+  navigateTo(urls[engine]);
+
+}
+
+
+/* =========================
+   BACK
+========================= */
+
+function browserBack(){
+
+  const tab =
+    browserTabs.find(t=>t.id===activeBrowserTab);
+
+  if(!tab) return;
+
+  if(tab.historyIndex>0){
+
+    tab.historyIndex--;
+
+    const url =
+      tab.history[tab.historyIndex];
+
+    tab.url = url;
+
+    tab.title =
+      getSiteName(url);
+
+    renderTabs();
+
+    openReal(url);
+
+  }
+
+}
+
+
+/* =========================
+   FORWARD
+========================= */
+
+function browserForward(){
+
+  const tab =
+    browserTabs.find(t=>t.id===activeBrowserTab);
+
+  if(!tab) return;
+
+  if(
+    tab.historyIndex <
+    tab.history.length-1
+  ){
+
+    tab.historyIndex++;
+
+    const url =
+      tab.history[tab.historyIndex];
+
+    tab.url = url;
+
+    tab.title =
+      getSiteName(url);
+
+    renderTabs();
+
+    openReal(url);
+
+  }
+
+}
+
+
+/* =========================
+   RELOAD
+========================= */
+
+function browserReload(){
+
+  const tab =
+    browserTabs.find(t=>t.id===activeBrowserTab);
+
+  if(tab && tab.url){
+
+    openReal(tab.url);
+
+  }
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function showHome(){
+
+  document.getElementById("browserAddress").value = "";
+
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value){
+
+  return String(value)
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+createBrowserTab();
+
+</script>
+
+</body>
+</html>
+```
